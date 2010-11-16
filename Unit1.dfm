@@ -36,6 +36,7 @@ object Form1: TForm1
     Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goEditing]
     PopupMenu = PopupMenu1
     TabOrder = 0
+    OnSetEditText = sgaSetEditText
   end
   object Panel1: TPanel
     Left = 0
@@ -73,6 +74,9 @@ object Form1: TForm1
         Width = 105
         Height = 105
         AutoSize = True
+        OnMouseDown = Image1MouseDown
+        OnMouseMove = Image1MouseMove
+        OnMouseUp = Image1MouseUp
       end
     end
     object Panel3: TPanel

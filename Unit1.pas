@@ -74,6 +74,14 @@ type
     procedure Delete1Click( Sender: TObject );
     procedure ACO1Click( Sender: TObject );
     procedure sensorPSO2Click( Sender: TObject );
+    procedure Image1MouseDown( Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer );
+    procedure Image1MouseUp( Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer );
+    procedure Image1MouseMove( Sender: TObject; Shift: TShiftState; X,
+      Y: Integer );
+    procedure sgaSetEditText( Sender: TObject; ACol, ARow: Integer;
+      const Value: string );
   private
     { Private declarations }
     procedure resizebitmap( ww, hh: integer );
@@ -291,7 +299,8 @@ begin
           Pen.Width := 2;
           MoveTo( x, y );
           LineTo( x2, y2 );
-        end else begin
+        end
+        else begin
           connectivity[i][j] := 0;
           connectivity[j][i] := 0;
         end;
@@ -511,6 +520,70 @@ begin
     Free;
   end;
   show_tabel;
+end;
+
+var
+  ox, oy, mx, my    : integer;
+
+procedure TForm1.Image1MouseDown( Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer );
+var
+  i                 : integer;
+  xx, yy            : integer;
+  r                 : real;
+begin
+  for i := 1 to sga.RowCount - 1 do begin
+    xx := StrToInt( trim( sga.Cells[1, i] ) );
+    yy := StrToInt( trim( sga.Cells[2, i] ) );
+    r := sqrt( ( xx - x ) * ( xx - x ) + ( yy - y ) * ( yy - y ) );
+    Memo1.lines.add( format( '%.3d %.3d %.3d %.3d %3.3f', [xx, yy, x, y, r] ) );
+    if r < StrToFloat( trim( sga.Cells[3, i] ) ) then begin
+      Image1.Tag := i;
+      ox := xx;
+      oy := yy;
+      mx := x;
+      my := y;
+      break;
+
+      Caption := sga.Rows[i].CommaText;
+    end;
+  end;
+end;
+
+procedure TForm1.Image1MouseUp( Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer );
+begin
+  if Image1.Tag <> 0 then begin
+    Image1.Tag := 0;
+  end;
+end;
+
+procedure TForm1.Image1MouseMove( Sender: TObject; Shift: TShiftState; X,
+  Y: Integer );
+begin
+  if Image1.Tag <> 0 then begin
+    with sga.Rows[image1.tag] do begin
+      Strings[1] := IntToStr( ox + ( x - mx ) );
+      Strings[2] := IntToStr( oy + ( y - my ) );
+      //Caption := CommaText;
+    end;
+    show_tabel;
+  end;
+end;
+
+procedure TForm1.sgaSetEditText( Sender: TObject; ACol, ARow: Integer;
+  const Value: string );
+var
+  tmpv              : integer;
+  tmpf              : single;
+begin
+  case ACol of
+    1, 2:
+      if trystrtoint( value, tmpv ) then show_tabel;
+    3:
+      if trystrtofloat( value, tmpf ) then show_tabel;
+  end;
+
 end;
 
 end.
