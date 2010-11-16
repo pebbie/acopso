@@ -23,12 +23,13 @@ var
   heur_pow          : real = 0.5;
   ants              : array of TACOSol;
   pheromone         : array of array of real;
-  num_ant, num_node : integer;
+  num_ant           : integer;
 
 implementation
 
 uses
-  Unit1; { array connectivity akan jadi faktor heuristik }
+  Unit1,
+  _pso1; { array connectivity akan jadi faktor heuristik }
 
 procedure aco_clear;
 var
@@ -108,7 +109,7 @@ begin
             //buat distribusi peluang
             sum := 0;
             for node := 0 to num_node - 1 do begin
-              if ( connectivity[last_pos][node] <> 0 ) and not ( node in visited ) then begin
+              if ( connectivity[last_pos][node] > 0 ) and not ( node in visited ) then begin
                 pdf[node] := power( pheromone[last_pos][node], pher_pow ) * power( 1.0 / connectivity[last_pos][node], heur_pow );
                 sum := sum + pdf[node];
               end

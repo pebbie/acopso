@@ -288,9 +288,12 @@ begin
           totaldist := totaldist + dist;
 
           Pen.Color := clRed;
-          Pen.Width := 3;
+          Pen.Width := 2;
           MoveTo( x, y );
           LineTo( x2, y2 );
+        end else begin
+          connectivity[i][j] := 0;
+          connectivity[j][i] := 0;
         end;
 
       end;
@@ -473,11 +476,13 @@ end;
 
 procedure TForm1.init_connectivity;
 var
-  i                 : integer;
+  i, j              : integer;
 begin
   setlength( connectivity, num_node );
   for i := 0 to high( connectivity ) do begin
     setlength( connectivity[i], num_node );
+    for j := 0 to high( connectivity[i] ) do
+      connectivity[i][j] := 0;
   end;
 end;
 

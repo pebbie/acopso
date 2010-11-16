@@ -57,7 +57,7 @@ object FrmArea: TFrmArea
     Top = 8
     Width = 75
     Height = 25
-    Caption = 'Close'
+    Caption = 'OK'
     TabOrder = 2
     OnClick = Button1Click
   end
